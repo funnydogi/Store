@@ -14,10 +14,10 @@ public class MyStoreTest
 {
   static int number = 0;
   static int amount = 0;
-  
+  static Set<MyAccount>accounts ;
   public static void main(String[] args)
   {
-    Set<MyAccount> accounts = new HashSet<>();
+    accounts = new HashSet<>();
     try(Scanner in = new Scanner(System.in))
     {      
       while(!in.hasNext("EXIT"))
@@ -25,7 +25,7 @@ public class MyStoreTest
         String[] task = in.nextLine().split(" ");
         
         //Проверка на корректность ввода задачи
-        if(!isCorrectTask(task) && !accounts.isEmpty())
+        if(!isCorrectTask(task) )
         {
           if(task[0].equals(""))
             continue;
@@ -33,7 +33,7 @@ public class MyStoreTest
           continue;
         }
         
-        
+            
         String operation = task[0];
         number = Integer.parseInt(task[1]); 
         //проверка на дублирование аккаунта
@@ -74,7 +74,7 @@ public class MyStoreTest
                 e.withdraw(amount);
             } 
             
-            System.out.println("OK");
+            System.out.println("ERROR");
             break;
           }
           case "BALANCE": 
@@ -98,8 +98,7 @@ public class MyStoreTest
   
   static boolean isCorrectTask(String[] tsk)
   {
-    if(tsk.length == 2 && (tsk[0].equals("NEWACCOUNT") || 
-                           tsk[0].equals("BALANCE")))
+    if(tsk.length == 2 && tsk[0].equals("NEWACCOUNT"))
     {
       try
       {
@@ -113,8 +112,24 @@ public class MyStoreTest
         
       }
     }
-    else if(tsk.length == 3 && (tsk[0].equals("DEPOSIT") || 
-                                tsk[0].equals("WITHDRAW")))
+    else if(tsk.length == 2 && tsk[0].equals("BALANCE") &&
+            !accounts.isEmpty())
+    {
+      try
+      {
+        if(isValid(Integer.parseInt(tsk[1])))
+        {
+          return true;
+        }
+      }
+      catch(NumberFormatException e)
+      {
+        
+      }
+    }
+    else if(tsk.length == 3     &&
+            !accounts.isEmpty() &&
+            (tsk[0].equals("DEPOSIT") || tsk[0].equals("WITHDRAW")))
     {
       try
       {
